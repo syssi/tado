@@ -1,4 +1,9 @@
-"""Support for the (unofficial) Tado API."""
+"""
+Support for the (unofficial) Tado api.
+
+For more details about this component, please refer to the documentation at
+https://home-assistant.io/components/tado/
+"""
 import logging
 import urllib
 from datetime import timedelta
@@ -10,7 +15,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.const import CONF_USERNAME, CONF_PASSWORD
 from homeassistant.util import Throttle
 
-REQUIREMENTS = ['python-tado==0.2.3']
+REQUIREMENTS = ['python-tado==0.2.7']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +31,7 @@ TADO_COMPONENTS = [
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
         vol.Required(CONF_USERNAME): cv.string,
-        vol.Required(CONF_PASSWORD): cv.string,
+        vol.Required(CONF_PASSWORD): cv.string
     })
 }, extra=vol.ALLOW_EXTRA)
 
@@ -117,7 +122,15 @@ class TadoDataStore:
         self.tado.resetZoneOverlay(zone_id)
         self.update(no_throttle=True)  # pylint: disable=unexpected-keyword-arg
 
-    def set_zone_overlay(self, zone_id, mode, temperature=None, duration=None):
+    def set_zone_overlay(
+            self, zone_id, device_type, overlay_mode,
+            temperature=None, duration=None, mode=None, power=True):
         """Wrap for setZoneOverlay(..)."""
-        self.tado.setZoneOverlay(zone_id, mode, temperature, duration)
+        self.tado.setZoneOverlay(zone_id,
+                                 overlay_mode,
+                                 temperature,
+                                 duration,
+                                 device_type,
+                                 power,
+                                 mode)
         self.update(no_throttle=True)  # pylint: disable=unexpected-keyword-arg
